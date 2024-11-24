@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GameHeader } from "./game/GameHeader";
 import { GameControls } from "./game/GameControls";
 import { GameStats } from "./game/GameStats";
@@ -15,11 +15,13 @@ export default function PrisonersDilemma() {
   const [totalPoints, setTotalPoints] = useState({ my: 0, opponent: 0 });
   const [isAnimating, setIsAnimating] = useState(false);
   const [lastResult, setLastResult] = useState<Round | null>(null);
-  const [currentOpponentIndex, setCurrentOpponentIndex] = useState(0);
+  // const [currentOpponentIndex, setCurrentOpponentIndex] = useState(0);
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(strategies[0]);
   const [numberOfRounds, setNumberOfRounds] = useState(1);
-  const [currentRound, setCurrentRound] = useState(1);
+  // const [currentRound, setCurrentRound] = useState(1);
   const [isInitialized, setIsInitialized] = useState(false);
+  const currentOpponentRef = useRef(0);
+  const currentRoundRef = useRef(1);
 
   const randomizeOpponentStrategies = () => {
     opponents.forEach(opponent => {
@@ -36,6 +38,9 @@ export default function PrisonersDilemma() {
   }, [isInitialized]);
 
   const playRound = async () => {
+    const currentOpponentIndex = currentOpponentRef.current;
+    const currentRound = currentRoundRef.current;
+
     if (isAnimating || currentOpponentIndex >= opponents.length) return;
     setIsAnimating(true);
 
@@ -43,7 +48,7 @@ export default function PrisonersDilemma() {
     const myChoice = selectedStrategy.getChoice(rounds);
     const opponentChoice = currentOpponent.strategy.getChoice(rounds);
     const result = currentOpponent.outcomes[myChoice][opponentChoice];
-    
+
     const roundResult: Round = {
       myChoice,
       opponentChoice,
@@ -68,51 +73,52 @@ export default function PrisonersDilemma() {
 
   const playAllRounds = async () => {
     if (isAnimating) return;
-    
+
+    currentOpponentRef.current = 0;
+
     const numberOfOpponents = opponents.length;
 
-    console.log(numberOfOpponents);
-    console.log(currentOpponentIndex);
-
-    while (currentRound <= numberOfRounds) {
-      for (let i = currentOpponentIndex; i < numberOfOpponents; i++) {
-        if (currentOpponentIndex === numberOfOpponents - 1) {
-          if (currentRound < numberOfRounds) {
-            setCurrentRound(prev => prev + 1);
-            setCurrentOpponentIndex(0);
+    while (currentRoundRef.current <= numberOfRounds) {
+      for (let i = 0; i <= numberOfOpponents; i++) {
+        currentOpponentRef.current = i;
+        if (i === numberOfOpponents) {
+          if (currentRoundRef.current === numberOfRounds) {
+            // Break out of the while loop
+            return; // Exits the function, breaking the loop
           }
+          currentRoundRef.current += 1; // Move to the next round
+          // currentOpponentRef.current = 0; // Reset opponents
+          break; // Exit the current for loop to start a new round
         } else {
-          setCurrentOpponentIndex(prev => {
-            console.log(prev);
-            return prev + 1;
-          });
-          console.log(currentOpponentIndex);
+          // currentOpponentRef.current = i;
+          await playRound(); // Play the round
         }
-        await playRound();
       }
-      if (currentRound === numberOfRounds) break;
     }
-  };
+  }
 
   const resetGame = () => {
     setRounds([]);
     setTotalPoints({ my: 0, opponent: 0 });
     setLastResult(null);
-    setCurrentOpponentIndex(0);
-    setCurrentRound(1);
+    currentOpponentRef.current = 0
+    // setCurrentOpponentIndex(0);
+    currentRoundRef.current = 1;
     randomizeOpponentStrategies();
   };
 
-  const currentOpponent = currentOpponentIndex < opponents.length ? opponents[currentOpponentIndex] : null;
-  const isGameComplete = currentRound === numberOfRounds && currentOpponentIndex >= opponents.length;
+  const currentRound = currentRoundRef.current;
+
+  const currentOpponent = currentOpponentRef.current < opponents.length ? opponents[currentOpponentRef.current] : null;
+  const isGameComplete = currentRound === numberOfRounds && currentOpponentRef.current >= opponents.length;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <GameHeader />
-      
+
       <GameControls
         currentOpponent={currentOpponent}
-        remainingOpponents={opponents.length - currentOpponentIndex}
+        remainingOpponents={opponents.length - currentOpponentRef.current}
         strategies={strategies}
         selectedStrategy={selectedStrategy}
         onStrategyChange={setSelectedStrategy}
@@ -134,7 +140,7 @@ export default function PrisonersDilemma() {
         totalRounds={numberOfRounds}
       />
 
-      <OpponentsList opponents={opponents} currentOpponentIndex={currentOpponentIndex} />
+      <OpponentsList opponents={opponents} currentOpponentIndex={currentOpponentRef.current} />
 
       <RoundHistory rounds={rounds} />
     </div>
