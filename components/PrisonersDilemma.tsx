@@ -1,48 +1,55 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { GameHeader } from "./game/GameHeader";
 import { GameControls } from "./game/GameControls";
-import { GameStats } from "./game/GameStats";
 import { RoundHistory } from "./game/RoundHistory";
 import { OpponentsList } from "./game/OpponentsList";
-import { opponents } from "@/lib/game/opponents";
+import { generateRandomOpponents } from "@/lib/game/opponents";
 import { strategies } from "@/lib/game/strategies";
-import type { Round, Strategy } from "@/lib/game/types";
+import type { Opponent, Round, Strategy } from "@/lib/game/types";
 
 export default function PrisonersDilemma() {
+  const [numberOfOpponents, setNumberOfOpponents] = useState(8);
+  const [opponents, setOpponents] = useState<Opponent[]>([]);
   const [rounds, setRounds] = useState<Round[]>([]);
   const [totalPoints, setTotalPoints] = useState({ my: 0, opponent: 0 });
   const [isAnimating, setIsAnimating] = useState(false);
-  const [lastResult, setLastResult] = useState<Round | null>(null);
-  // const [currentOpponentIndex, setCurrentOpponentIndex] = useState(0);
-  const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(strategies[0]);
+    const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(strategies[0]);
   const [numberOfRounds, setNumberOfRounds] = useState(1);
-  // const [currentRound, setCurrentRound] = useState(1);
+  const [gameDelay, setGameDelay] = useState(300);
   const [isInitialized, setIsInitialized] = useState(false);
   const currentOpponentRef = useRef(0);
   const currentRoundRef = useRef(1);
 
-  const randomizeOpponentStrategies = () => {
-    opponents.forEach(opponent => {
-      const randomStrategy = strategies[Math.floor(Math.random() * strategies.length)];
-      opponent.strategy = randomStrategy;
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    setOpponents(prev => {
+      const diff = numberOfOpponents - prev.length;
+      if (diff > 0) {
+        return [...prev, ...generateRandomOpponents(diff)];
+      }
+      return prev.slice(0, diff);
     });
-  };
+  }, [numberOfOpponents, isInitialized]);
+
+  const randomizeOpponentList = useCallback(() => {
+    setOpponents(generateRandomOpponents(numberOfOpponents));
+  }, [numberOfOpponents]);
 
   useEffect(() => {
     if (!isInitialized) {
-      randomizeOpponentStrategies();
       setIsInitialized(true);
     }
   }, [isInitialized]);
 
   const playRound = async () => {
+    if (isAnimating || currentOpponentRef.current >= numberOfOpponents) return;
+    setIsAnimating(true);
+
     const currentOpponentIndex = currentOpponentRef.current;
     const currentRound = currentRoundRef.current;
-
-    if (isAnimating || currentOpponentIndex >= opponents.length) return;
-    setIsAnimating(true);
 
     const currentOpponent = opponents[currentOpponentIndex];
     const myChoice = selectedStrategy.getChoice(rounds);
@@ -60,30 +67,27 @@ export default function PrisonersDilemma() {
       roundNumber: currentRound
     };
 
-    setLastResult(roundResult);
+    // setLastResult(roundResult);
     setRounds(prev => [...prev, roundResult]);
     setTotalPoints(prev => ({
       my: prev.my + result.myPoints,
       opponent: prev.opponent + result.opponentPoints,
     }));
 
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise(resolve => setTimeout(resolve, gameDelay));
     setIsAnimating(false);
-  };
+  }
 
   const playAllRounds = async () => {
     if (isAnimating) return;
 
     currentOpponentRef.current = 0;
 
-    const numberOfOpponents = opponents.length;
-
     while (currentRoundRef.current <= numberOfRounds) {
       for (let i = 0; i <= numberOfOpponents; i++) {
         currentOpponentRef.current = i;
         if (i === numberOfOpponents) {
           if (currentRoundRef.current === numberOfRounds) {
-            // Break out of the while loop
             return;
           }
           currentRoundRef.current += 1;
@@ -96,50 +100,59 @@ export default function PrisonersDilemma() {
   }
 
   const resetGame = () => {
-    currentOpponentRef.current = 0
-    currentRoundRef.current = 1;
+    setNumberOfOpponents(12);
     setRounds([]);
     setTotalPoints({ my: 0, opponent: 0 });
-    setLastResult(null);
-    randomizeOpponentStrategies();
+    // setLastResult(null);
+    currentOpponentRef.current = 0
+    currentRoundRef.current = 1;
+    randomizeOpponentList();
   };
 
   const currentRound = currentRoundRef.current;
-
-  const currentOpponent = currentOpponentRef.current < opponents.length ? opponents[currentOpponentRef.current] : null;
-  const isGameComplete = currentRound === numberOfRounds && currentOpponentRef.current >= opponents.length;
+    const isGameComplete = currentRound === numberOfRounds && currentOpponentRef.current >= numberOfOpponents;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 pb-8">
       <GameHeader />
 
       <GameControls
         totalPoints={totalPoints}
-        remainingOpponents={opponents.length - currentOpponentRef.current}
+        remainingOpponents={numberOfOpponents - currentOpponentRef.current}
+        numberOfOpponents={numberOfOpponents}
         strategies={strategies}
         selectedStrategy={selectedStrategy}
         onStrategyChange={setSelectedStrategy}
         onPlayAllRounds={playAllRounds}
         onReset={resetGame}
-        onRandomizeStrategies={randomizeOpponentStrategies}
         isAnimating={isAnimating}
         isGameComplete={isGameComplete}
         numberOfRounds={numberOfRounds}
         currentRound={currentRound}
         onRoundsChange={setNumberOfRounds}
+        onNumberOfOpponentsChange={setNumberOfOpponents}
+        gameDelay={gameDelay}
+        onDelayChange={setGameDelay}
       />
 
-      <GameStats
-        totalPoints={totalPoints}
-        lastResult={lastResult}
-        currentOpponent={currentOpponent}
-        currentRound={currentRound}
-        totalRounds={numberOfRounds}
+      <OpponentsList 
+        opponents={opponents} 
+        currentOpponentIndex={currentOpponentRef.current}
+        rounds={rounds}
+        onRandomizeOpponents={randomizeOpponentList}
+        isAnimating={isAnimating}
       />
 
-      <OpponentsList opponents={opponents} currentOpponentIndex={currentOpponentRef.current} />
-
-      <RoundHistory rounds={rounds} />
+      <div>
+        {/* <GameStats
+          totalPoints={totalPoints}
+          lastResult={lastResult}
+          currentOpponent={currentOpponent}
+          currentRound={currentRound}
+          totalRounds={numberOfRounds}
+        /> */}
+        <RoundHistory rounds={rounds} />
+      </div>
     </div>
   );
 }
