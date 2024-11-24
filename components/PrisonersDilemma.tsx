@@ -84,13 +84,11 @@ export default function PrisonersDilemma() {
         if (i === numberOfOpponents) {
           if (currentRoundRef.current === numberOfRounds) {
             // Break out of the while loop
-            return; // Exits the function, breaking the loop
+            return;
           }
-          currentRoundRef.current += 1; // Move to the next round
-          // currentOpponentRef.current = 0; // Reset opponents
-          break; // Exit the current for loop to start a new round
+          currentRoundRef.current += 1;
+          break;
         } else {
-          // currentOpponentRef.current = i;
           await playRound(); // Play the round
         }
       }
