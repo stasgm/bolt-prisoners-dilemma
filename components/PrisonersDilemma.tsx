@@ -67,7 +67,7 @@ export default function PrisonersDilemma() {
       opponent: prev.opponent + result.opponentPoints,
     }));
 
-    // await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 300));
     setIsAnimating(false);
   };
 
@@ -89,19 +89,18 @@ export default function PrisonersDilemma() {
           currentRoundRef.current += 1;
           break;
         } else {
-          await playRound(); // Play the round
+          await playRound();
         }
       }
     }
   }
 
   const resetGame = () => {
+    currentOpponentRef.current = 0
+    currentRoundRef.current = 1;
     setRounds([]);
     setTotalPoints({ my: 0, opponent: 0 });
     setLastResult(null);
-    currentOpponentRef.current = 0
-    // setCurrentOpponentIndex(0);
-    currentRoundRef.current = 1;
     randomizeOpponentStrategies();
   };
 
@@ -115,7 +114,7 @@ export default function PrisonersDilemma() {
       <GameHeader />
 
       <GameControls
-        currentOpponent={currentOpponent}
+        totalPoints={totalPoints}
         remainingOpponents={opponents.length - currentOpponentRef.current}
         strategies={strategies}
         selectedStrategy={selectedStrategy}

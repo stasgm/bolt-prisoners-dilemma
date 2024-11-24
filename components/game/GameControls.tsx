@@ -12,10 +12,10 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { PlayIcon, RotateCcwIcon, ShuffleIcon } from 'lucide-react';
-import type { Opponent, Strategy } from '@/lib/game/types';
+import type { Strategy } from '@/lib/game/types';
 
 interface GameControlsProps {
-  currentOpponent: Opponent | null;
+  totalPoints: { my: number; opponent: number };
   remainingOpponents: number;
   strategies: Strategy[];
   selectedStrategy: Strategy;
@@ -31,7 +31,7 @@ interface GameControlsProps {
 }
 
 export function GameControls({
-  currentOpponent,
+  totalPoints,
   remainingOpponents,
   strategies,
   selectedStrategy,
@@ -49,27 +49,6 @@ export function GameControls({
     <Card className="p-6 bg-gray-800 border-gray-700">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label className="text-gray-300">Current Opponent</Label>
-            <div className="p-3 bg-gray-700 rounded-lg">
-              {currentOpponent ? (
-                <div className="space-y-2">
-                  <div className="font-bold text-lg text-blue-400">
-                    {currentOpponent.name}
-                  </div>
-                  <div className="text-sm text-gray-300">
-                    {currentOpponent.description}
-                  </div>
-                  <div className="text-sm text-blue-400">
-                    Using strategy: {currentOpponent.strategy.name}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-gray-400">Game Complete</div>
-              )}
-            </div>
-          </div>
-
           <div className="space-y-2">
             <Label className="text-gray-300">Your Strategy</Label>
             <Select
@@ -106,7 +85,7 @@ export function GameControls({
         </div>
 
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="p-4 bg-gray-700 rounded-lg">
               <div className="text-sm text-gray-300">Current Round</div>
               <div className="text-3xl font-bold text-blue-400">
@@ -119,9 +98,17 @@ export function GameControls({
                 {remainingOpponents}
               </div>
             </div>
-          </div>
 
-          <div className="flex gap-4">
+            <div className="text-center p-4 bg-gray-700 rounded-lg">
+              <div className="text-sm text-gray-300">Your Score</div>
+              <div className="text-3xl font-bold text-blue-400">
+                {totalPoints.my}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-4">
             <Button
               onClick={onPlayAllRounds}
               disabled={isAnimating || isGameComplete}
@@ -150,7 +137,6 @@ export function GameControls({
             <RotateCcwIcon className="mr-2 h-4 w-4" />
             Reset Game
           </Button>
-        </div>
       </div>
     </Card>
   );
