@@ -27,7 +27,7 @@ export function GameStats({
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-300">Scoreboard</h2>
           <div className="flex items-center space-x-2">
-            <Badge variant="outline">
+            <Badge variant="secondary">
               Round {currentRound}/{totalRounds}
             </Badge>
             <TrendingUpIcon className="text-blue-400" />

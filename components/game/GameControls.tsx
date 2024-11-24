@@ -54,7 +54,7 @@ export function GameControls({
             <div className="p-3 bg-gray-700 rounded-lg">
               {currentOpponent ? (
                 <div className="space-y-2">
-                  <div className="font-semibold text-lg">
+                  <div className="font-bold text-lg text-blue-400">
                     {currentOpponent.name}
                   </div>
                   <div className="text-sm text-gray-300">

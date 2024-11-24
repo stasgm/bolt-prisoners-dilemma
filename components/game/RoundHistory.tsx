@@ -31,7 +31,7 @@ export function RoundHistory({ rounds }: RoundHistoryProps) {
             <div className="grid gap-2">
               {roundGames.map((round, gameIndex) => (
                 <div
-                  key={gameIndex}
+                  key={`${round.roundNumber}-${gameIndex}`}
                   className="flex flex-col p-3 bg-gray-700 rounded-lg space-y-2"
                 >
                   <div className="flex justify-between items-center">
