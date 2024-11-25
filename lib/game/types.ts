@@ -12,7 +12,9 @@ export interface Round {
   opponentPoints: number;
   description: string;
   opponentName: string;
+  opponent2Name: string;
   opponentStrategy: string;
+  opponent2Strategy: string;
   roundNumber: number;
 }
 
@@ -32,12 +34,6 @@ export interface Outcome {
   opponentPoints: number;
   description: string;
 }
-
-// export interface Outcomes {
-//   [key: string]: {
-//     [key: string]: Outcome;
-//   };
-// }
 
 export interface Strategy {
   id: string;

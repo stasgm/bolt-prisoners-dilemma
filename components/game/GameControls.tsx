@@ -16,7 +16,8 @@ import type { Strategy } from '@/lib/game/types';
 
 interface GameControlsProps {
   totalPoints: { my: number; opponent: number };
-  remainingOpponents: number;
+  totalGames: number;
+  playedGames: number;
   numberOfOpponents: number;
   strategies: Strategy[];
   selectedStrategy: Strategy;
@@ -35,7 +36,8 @@ interface GameControlsProps {
 
 export function GameControls({
   totalPoints,
-  remainingOpponents,
+  totalGames,
+  playedGames,
   numberOfOpponents,
   strategies,
   selectedStrategy,
@@ -78,8 +80,8 @@ export function GameControls({
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <div className="w-40">
+            <div className="flex-1 grid grid-cols-3 gap-4">
+              <div>
                 <Label className="text-gray-300">Rounds</Label>
                 <Input
                   type="number"
@@ -92,22 +94,21 @@ export function GameControls({
                   className="bg-gray-700 border-gray-600 w-full"
                 />
               </div>
-              <div className="w-40">
-                <Label className="text-gray-300">Number of opponents</Label>
+              <div>
+                <Label className="text-gray-300">Opponents</Label>
                 <Input
                   type="number"
-                  min="1"
-                  max="24"
+                  min="2"
+                  max="16"
                   value={numberOfOpponents}
                   onChange={(e) =>
                     onNumberOfOpponentsChange(parseInt(e.target.value))
-                    // onNumberOfOpponentsChange(Math.max(1, parseInt(e.target.value) || 12))
                   }
                   className="bg-gray-700 border-gray-600 w-full"
                 />
               </div>
-              <div className="w-40">
-                <Label className="text-gray-300">Game Speed</Label>
+              <div>
+                <Label className="text-gray-300">Delay (ms)</Label>
                 <Input
                   type="number"
                   min="0"
@@ -148,15 +149,15 @@ export function GameControls({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-gray-700 rounded-lg text-center">
-              <div className="text-sm text-gray-300">Your Score</div>
+              <div className="text-sm text-gray-300">Your Points</div>
               <div className="text-3xl font-bold text-blue-400">
                 {totalPoints.my}
               </div>
             </div>
             <div className="p-4 bg-gray-700 rounded-lg text-center">
-              <div className="text-sm text-gray-300">Total Games</div>
+              <div className="text-sm text-gray-300">Games Progress</div>
               <div className="text-3xl font-bold text-purple-400">
-                {currentRound * numberOfOpponents}
+                {playedGames}/{totalGames}
               </div>
             </div>
           </div>
@@ -164,21 +165,19 @@ export function GameControls({
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-gray-700 rounded-lg text-center">
-                <div className="text-sm text-gray-300">Current</div>
+                <div className="text-sm text-gray-300">Current Round</div>
                 <div className="text-3xl font-bold text-purple-400">
                   {currentRound}/{numberOfRounds}
                 </div>
               </div>
               <div className="p-4 bg-gray-700 rounded-lg text-center">
-                <div className="text-sm text-gray-300">Remaining</div>
+                <div className="text-sm text-gray-300">Games per Round</div>
                 <div className="text-3xl font-bold text-purple-400">
-                  {remainingOpponents}
+                  {(numberOfOpponents * (numberOfOpponents - 1)) / 2}
                 </div>
               </div>
             </div>
           </div>
-
-
         </div>
       </div>
     </Card>

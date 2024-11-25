@@ -1,7 +1,7 @@
 import type { Choice, Opponent, Round, StandardOutcomes, Strategy, Trait } from "./types";
 import { strategies } from "./strategies";
 
-const standardOutcomes: StandardOutcomes = {
+export const standardOutcomes: StandardOutcomes = {
   cooperate: {
     cooperate: { myPoints: 3, opponentPoints: 3, description: "Mutual Cooperation" },
     refuse: { myPoints: 0, opponentPoints: 5, description: "Betrayed" },
@@ -88,6 +88,28 @@ function shuffleArray<T>(array: T[]): T[] {
   return array;
 }
 
+export interface IPlayerInfo {
+  id: string;
+  name: string;
+  description: string;
+  personality: string;
+  strategy: Strategy;
+}
+
+export const createPlayer = ({ id, name, description, personality, strategy }: IPlayerInfo): Opponent => {
+  return {
+    id,
+    name,
+    description,
+    personality,
+    strategy,
+    outcomes: standardOutcomes,
+    getChoice: function (rounds: Round[]): Choice {
+      return this.strategy.getChoice(rounds);
+    },
+  };
+};
+
 // Generate random opponents
 export function generateRandomOpponents(count: number): Opponent[] {
   const uniqueNames = shuffleArray([...randomNames]); // Shuffle and ensure names are unique
@@ -102,17 +124,16 @@ export function generateRandomOpponents(count: number): Opponent[] {
     const randomStrategy = getRandomStrategy();
     const { personality, description } = deriveOpponentTraits(randomStrategy);
 
-    randomOpponents.push({
-      id: `opponent-${i + 1}`,
-      name: randomName,
-      description: description,
-      personality: personality,
-      strategy: randomStrategy,
-      outcomes: standardOutcomes,
-      getChoice: function (rounds: Round[]): Choice {
-        return this.strategy.getChoice(rounds);
-      },
-    });
+    randomOpponents.push(
+      createPlayer({
+        id: `opponent-${i + 1}`,
+        name: randomName,
+        description: description,
+        personality: personality,
+        strategy: randomStrategy,
+      })
+    );
   }
+
   return randomOpponents;
 }

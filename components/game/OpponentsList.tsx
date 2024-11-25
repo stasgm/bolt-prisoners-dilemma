@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 interface OpponentsListProps {
   opponents: Opponent[];
-  currentOpponentIndex: number;
+  currentPlayers: [string, string];
   rounds: Round[];
   onRandomizeOpponents: () => void;
   isAnimating: boolean;
@@ -17,7 +17,7 @@ interface OpponentsListProps {
 
 export function OpponentsList({
   opponents,
-  currentOpponentIndex,
+  currentPlayers,
   rounds,
   onRandomizeOpponents,
   isAnimating,
@@ -51,10 +51,8 @@ export function OpponentsList({
             key={`${opponent.id}-${index}`}
             className={cn(
               'p-4 rounded-lg transition-all duration-200',
-              index === currentOpponentIndex
+              currentPlayers.indexOf(opponent.id) > -1
                 ? 'bg-blue-600 text-white ring-2 ring-blue-400'
-                : index < currentOpponentIndex
-                ? 'bg-gray-600'
                 : 'bg-gray-700'
             )}
           >
@@ -62,13 +60,15 @@ export function OpponentsList({
               <h3
                 className={cn(
                   'font-semibold',
-                  index === currentOpponentIndex ? 'text-white' : 'text-blue-300'
+                  currentPlayers.indexOf(opponent.id) > -1
+                    ? 'text-white'
+                    : 'text-blue-300'
                 )}
               >
                 {opponent.name}
               </h3>
               <Badge
-                variant={index === currentOpponentIndex ? 'secondary' : 'default'}
+                variant={currentPlayers.indexOf(opponent.id) > -1 ? 'secondary' : 'default'}
                 className="ml-2"
               >
                 {opponentPoints[opponent.id] || 0} pts
@@ -82,15 +82,11 @@ export function OpponentsList({
               </span>
               <Badge
                 variant={
-                  index === currentOpponentIndex ? 'secondary' : 'outline'
+                  currentPlayers.indexOf(opponent.id) > -1 ? 'secondary' : 'outline'
                 }
-                className={cn(index === currentOpponentIndex ? 'text-black' : 'text-white', 'text-xs')}
+                className={cn(currentPlayers.indexOf(opponent.id) > -1 ? 'text-black' : 'text-white', 'text-xs')}
               >
-                {index === currentOpponentIndex
-                  ? 'Current'
-                  : index < currentOpponentIndex
-                  ? 'Done'
-                  : 'Waiting'}
+                {currentPlayers.indexOf(opponent.id) > -1 ? 'Current' : 'Done'}
               </Badge>
             </div>
           </div>
