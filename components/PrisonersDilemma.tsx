@@ -15,12 +15,40 @@ export default function PrisonersDilemma() {
   const [rounds, setRounds] = useState<Round[]>([]);
   const [totalPoints, setTotalPoints] = useState({ my: 0, opponent: 0 });
   const [isAnimating, setIsAnimating] = useState(false);
-    const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(strategies[0]);
+  const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(strategies[0]);
   const [numberOfRounds, setNumberOfRounds] = useState(1);
   const [gameDelay, setGameDelay] = useState(300);
   const [isInitialized, setIsInitialized] = useState(false);
   const currentOpponentRef = useRef(0);
   const currentRoundRef = useRef(1);
+  const childRef = useRef<HTMLDivElement>(null);
+
+  const scrollToChild = async () => {
+    if (childRef.current) {
+      await smoothScrollToElement(childRef.current);
+    }
+  };
+
+  const smoothScrollToElement = (element: HTMLElement): Promise<void> => {
+    return new Promise((resolve) => {
+      const onScroll = () => {
+        const elementTop = element.getBoundingClientRect().top;
+        if (Math.abs(elementTop) < 1) {
+          window.removeEventListener("scroll", onScroll);
+          resolve();
+        }
+      };
+
+      window.addEventListener("scroll", onScroll);
+      element.scrollIntoView({ behavior: "smooth" });
+
+      // Fallback timeout in case the scroll event doesn’t fire
+      setTimeout(() => {
+        window.removeEventListener("scroll", onScroll);
+        resolve();
+      }, 1000);
+    });
+  };
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -46,6 +74,9 @@ export default function PrisonersDilemma() {
 
   const playRound = async () => {
     if (isAnimating || currentOpponentRef.current >= numberOfOpponents) return;
+
+    await scrollToChild();
+
     setIsAnimating(true);
 
     const currentOpponentIndex = currentOpponentRef.current;
@@ -144,14 +175,7 @@ export default function PrisonersDilemma() {
       />
 
       <div>
-        {/* <GameStats
-          totalPoints={totalPoints}
-          lastResult={lastResult}
-          currentOpponent={currentOpponent}
-          currentRound={currentRound}
-          totalRounds={numberOfRounds}
-        /> */}
-        <RoundHistory rounds={rounds} />
+        <RoundHistory rounds={rounds} ref={childRef} />
       </div>
     </div>
   );

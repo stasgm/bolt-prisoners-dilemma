@@ -78,7 +78,7 @@ export function GameControls({
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="flex-1 grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div className="w-40">
                 <Label className="text-gray-300">Rounds</Label>
                 <Input

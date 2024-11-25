@@ -12,18 +12,13 @@ const standardOutcomes: StandardOutcomes = {
   },
 };
 
-
-
-// Set initial strategy to first strategy for consistent hydration
-// const initialStrategy = strategies[0];
-
 // Function to get a random strategy
 function getRandomStrategy(): Strategy {
   return strategies[Math.floor(Math.random() * strategies.length)];
 }
 
 // Function to derive personality and description based on strategy
-function deriveOpponentTraits(strategy: Strategy): { personality: string; description: string } {
+function deriveOpponentTraits(strategy: Strategy): Trait {
   const traits: Record<string, Trait> = {
     "always-cooperate": {
       personality: "Optimistic",
@@ -37,32 +32,79 @@ function deriveOpponentTraits(strategy: Strategy): { personality: string; descri
       personality: "Reciprocal",
       description: "Reflects your previous move, cooperating if you cooperate, and betraying if you betray.",
     },
-    "grudger": {
+    grudger: {
       personality: "Resentful",
       description: "Starts cooperatively but holds grudges and never forgives betrayal.",
     },
-    "pavlov": {
+    pavlov: {
       personality: "Conditional",
-      description: "Adjusts their choice based on the outcome of the previous round, favoring cooperation when outcomes align.",
+      description:
+        "Adjusts their choice based on the outcome of the previous round, favoring cooperation when outcomes align.",
     },
   };
 
-  return traits[strategy.id] || {
-    personality: "Unpredictable",
-    description: "A wildcard opponent with an unexpected approach to decisions.",
-  };
+  return (
+    traits[strategy.id] || {
+      personality: "Unpredictable",
+      description: "A wildcard opponent with an unexpected approach to decisions.",
+    }
+  );
+}
+
+const randomNames = [
+  "Alex",
+  "Jordan",
+  "Taylor",
+  "Morgan",
+  "Casey",
+  "Riley",
+  "Quinn",
+  "Avery",
+  "Jamie",
+  "Drew",
+  "Bailey",
+  "Harper",
+  "Reese",
+  "Cameron",
+  "Charlie",
+  "Emerson",
+  "Logan",
+  "Peyton",
+  "Sawyer",
+  "Skyler",
+  "Stas",
+  "Olya",
+  "Nox",
+  "Yura",
+  "Max",
+  "Inka",
+];
+
+function shuffleArray<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 // Generate random opponents
 export function generateRandomOpponents(count: number): Opponent[] {
+  const uniqueNames = shuffleArray([...randomNames]); // Shuffle and ensure names are unique
   const randomOpponents: Opponent[] = [];
-  for (let i = 1; i <= count; i++) {
+
+  for (let i = 0; i < count; i++) {
+    if (i >= uniqueNames.length) {
+      throw new Error("Not enough unique names for opponents.");
+    }
+
+    const randomName = uniqueNames[i];
     const randomStrategy = getRandomStrategy();
     const { personality, description } = deriveOpponentTraits(randomStrategy);
 
     randomOpponents.push({
-      id: `opponent-${i}`,
-      name: `Opponent ${i}`,
+      id: `opponent-${i + 1}`,
+      name: randomName,
       description: description,
       personality: personality,
       strategy: randomStrategy,
@@ -74,10 +116,3 @@ export function generateRandomOpponents(count: number): Opponent[] {
   }
   return randomOpponents;
 }
-
-// Initial set of opponents
-// const opponents: Opponent[] = [];
-
-// Add 30 random opponents
-// const additionalOpponents = generateRandomOpponents(30);
-// opponents.push(...additionalOpponents);
