@@ -6,10 +6,10 @@ export interface Trait {
 }
 
 export interface Round {
-  myChoice: Choice;
   opponentChoice: Choice;
-  myPoints: number;
+  opponent2Choice: Choice;
   opponentPoints: number;
+  opponent2Points: number;
   description: string;
   opponentName: string;
   opponent2Name: string;
@@ -17,6 +17,7 @@ export interface Round {
   opponent2Strategy: string;
   roundNumber: number;
 }
+
 
 export interface StandardOutcomes {
   cooperate: {
@@ -30,8 +31,8 @@ export interface StandardOutcomes {
 }
 
 export interface Outcome {
-  myPoints: number;
   opponentPoints: number;
+  opponent2Points: number;
   description: string;
 }
 

@@ -24,9 +24,17 @@ export function OpponentsList({
 }: OpponentsListProps) {
   // Calculate total points for each opponent
   const opponentPoints = opponents.reduce((acc, opponent) => {
-    acc[opponent.id] = rounds
+    // Calculate points from both roles (opponentName and opponent2Name)
+    const pointsAsOpponent = rounds
       .filter((round) => round.opponentName === opponent.name)
       .reduce((sum, round) => sum + round.opponentPoints, 0);
+
+    const pointsAsOpponent2 = rounds
+      .filter((round) => round.opponent2Name === opponent.name)
+      .reduce((sum, round) => sum + round.opponent2Points, 0);
+
+    // Combine points from both roles
+    acc[opponent.id] = pointsAsOpponent + pointsAsOpponent2;
     return acc;
   }, {} as Record<string, number>);
 

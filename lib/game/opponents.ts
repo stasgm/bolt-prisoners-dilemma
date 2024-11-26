@@ -3,12 +3,12 @@ import { strategies } from "./strategies";
 
 export const standardOutcomes: StandardOutcomes = {
   cooperate: {
-    cooperate: { myPoints: 3, opponentPoints: 3, description: "Mutual Cooperation" },
-    refuse: { myPoints: 0, opponentPoints: 5, description: "Betrayed" },
+    cooperate: { opponentPoints: 3, opponent2Points: 3, description: "Mutual Cooperation" },
+    refuse: { opponentPoints: 0, opponent2Points: 5, description: "Betrayed" },
   },
   refuse: {
-    cooperate: { myPoints: 5, opponentPoints: 0, description: "Successful Betrayal" },
-    refuse: { myPoints: 1, opponentPoints: 1, description: "Mutual Betrayal" },
+    cooperate: { opponentPoints: 5, opponent2Points: 0, description: "Successful Betrayal" },
+    refuse: { opponentPoints: 1, opponent2Points: 1, description: "Mutual Betrayal" },
   },
 };
 

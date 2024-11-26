@@ -18,7 +18,7 @@ export function RoundHistory({ rounds, ref }: RoundHistoryProps) {
 
   return (
     <>
-      <Card className="p-6 bg-gray-800 border-gray-700">
+      <Card className="p-6 bg-gray-800 border-gray-700" ref={ref}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-200">Round History</h2>
           <Badge variant="secondary">{rounds.length} Games</Badge>
@@ -43,15 +43,15 @@ export function RoundHistory({ rounds, ref }: RoundHistoryProps) {
                         </span>
                       </div>
                       <span className="text-sm text-gray-300">
-                        {round.myPoints} - {round.opponentPoints} pts
+                        {round.opponentPoints} - {round.opponent2Points} pts
                       </span>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={round.myChoice === "cooperate" ? "bg-blue-600" : "bg-red-600"}>
-                        {round.opponentName} ({round.opponentStrategy}): {round.myChoice === "cooperate" ? "Cooperated" : "Betrayed"}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-10 p-0 md:p-1">
+                      <Badge className={round.opponentChoice === "cooperate" ? "bg-blue-600" : "bg-red-600"}>
+                        {round.opponentName} ({round.opponentStrategy}): {round.opponentChoice === "cooperate" ? "Cooperated" : "Betrayed"}
                       </Badge>
-                      <Badge className={round.opponentChoice === "cooperate" ? "bg-green-600" : "bg-red-600"}>
-                        {round.opponent2Name} ({round.opponent2Strategy}): {round.opponentChoice === "cooperate" ? "Cooperated" : "Betrayed"}
+                      <Badge className={round.opponent2Choice === "cooperate" ? "bg-green-600" : "bg-red-600"}>
+                        {round.opponent2Name} ({round.opponent2Strategy}): {round.opponent2Choice === "cooperate" ? "Cooperated" : "Betrayed"}
                       </Badge>
                     </div>
                   </div>
@@ -61,7 +61,7 @@ export function RoundHistory({ rounds, ref }: RoundHistoryProps) {
           ))}
         </div>
       </Card>
-      <div ref={ref}></div>
+      {/* <div ref={ref}></div> */}
     </>
   );
 }

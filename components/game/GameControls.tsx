@@ -116,7 +116,7 @@ export function GameControls({
                   step={100}
                   value={gameDelay}
                   onChange={(e) =>
-                    onDelayChange(Math.min(1000, parseInt(e.target.value) || 500))
+                    onDelayChange(Math.min(1000, parseInt(e.target.value) || 50))
                   }
                   className="bg-gray-700 border-gray-600 w-full"
                 />

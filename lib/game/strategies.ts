@@ -34,7 +34,7 @@ export const strategies: Strategy[] = [
     getChoice: (rounds) => {
       if (rounds.length === 0) return "cooperate";
       const lastRound = rounds[rounds.length - 1];
-      return lastRound.myChoice === lastRound.opponentChoice ? "cooperate" : "refuse";
+      return lastRound.opponentChoice === lastRound.opponent2Choice ? "cooperate" : "refuse";
     },
   },
 ];

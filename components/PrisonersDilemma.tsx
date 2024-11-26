@@ -17,7 +17,7 @@ export default function PrisonersDilemma() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(strategies[0]);
   const [numberOfRounds, setNumberOfRounds] = useState(1);
-  const [gameDelay, setGameDelay] = useState(200);
+  const [gameDelay, setGameDelay] = useState(50);
   const [isInitialized, setIsInitialized] = useState(false);
   const currentRoundRef = useRef(1);
   const currentPlayersRef = useRef<[string, string]>(["", ""]);
@@ -53,7 +53,7 @@ export default function PrisonersDilemma() {
       setTimeout(() => {
         window.removeEventListener("scroll", onScroll);
         resolve();
-      }, 1000);
+      }, 100);
     });
   };
 
@@ -89,13 +89,13 @@ export default function PrisonersDilemma() {
       (r.opponentName === opponent1.name && r.opponent2Name === opponent2.name)
     ));
 
-    const result = opponent1.outcomes[choice1][choice2];
+    const result = opponent1.outcomes[choice1][choice2]; // REFACTOR
 
     const roundResult: Round = {
-      myChoice: choice1,
-      opponentChoice: choice2,
-      myPoints: result.myPoints,
+      opponentChoice: choice1,
+      opponent2Choice: choice2,
       opponentPoints: result.opponentPoints,
+      opponent2Points: result.opponent2Points,
       description: result.description,
       opponentName: opponent1.name,
       opponent2Name: opponent2.name,
@@ -104,10 +104,12 @@ export default function PrisonersDilemma() {
       roundNumber
     };
 
+    // await scrollToChild();
+
     setRounds(prev => [...prev, roundResult]);
     setTotalPoints(prev => ({
-      my: prev.my + (opponent1 === humanPlayer ? result.myPoints : (opponent2 === humanPlayer ? result.opponentPoints : 0)),
-      opponent: prev.opponent + (opponent1 === humanPlayer ? result.opponentPoints : (opponent2 === humanPlayer ? result.myPoints : 0)),
+      my: prev.my + (opponent1 === humanPlayer ? result.opponentPoints : (opponent2 === humanPlayer ? result.opponent2Points : 0)),
+      opponent: prev.opponent + (opponent1 === humanPlayer ? result.opponent2Points : (opponent2 === humanPlayer ? result.opponentPoints : 0)),
     }));
 
     await new Promise(resolve => setTimeout(resolve, gameDelay));
@@ -115,7 +117,6 @@ export default function PrisonersDilemma() {
 
   const playAllRounds = async () => {
     if (isAnimating) return;
-    await scrollToChild();
 
     setIsAnimating(true);
 
@@ -133,6 +134,7 @@ export default function PrisonersDilemma() {
     }
 
     setIsAnimating(false);
+    await scrollToChild();
   };
 
   const resetGame = () => {
