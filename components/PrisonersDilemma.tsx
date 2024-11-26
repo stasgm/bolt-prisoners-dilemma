@@ -8,6 +8,7 @@ import { OpponentsList } from "./game/OpponentsList";
 import { createPlayer, generateRandomOpponents } from "@/lib/game/opponents";
 import { strategies } from "@/lib/game/strategies";
 import type { Opponent, Round, Strategy } from "@/lib/game/types";
+import { TournamentCrosstable } from "./game/TournamentCrosstable";
 
 export default function PrisonersDilemma() {
   const [numberOfOpponents, setNumberOfOpponents] = useState(3);
@@ -182,11 +183,15 @@ export default function PrisonersDilemma() {
         onRandomizeOpponents={randomizeOpponentList}
         isAnimating={isAnimating}
         currentPlayers={currentPlayersRef.current}
+        ref={childRef}
+      />
+      
+      <TournamentCrosstable
+        rounds={rounds}
+        players={allPlayers.map(p => p.name)}
       />
 
-      <div>
-        <RoundHistory rounds={rounds} ref={childRef} />
-      </div>
+      <RoundHistory rounds={rounds} />
     </div>
   );
 }

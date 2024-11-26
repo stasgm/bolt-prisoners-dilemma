@@ -13,6 +13,7 @@ interface OpponentsListProps {
   rounds: Round[];
   onRandomizeOpponents: () => void;
   isAnimating: boolean;
+  ref: React.Ref<HTMLDivElement>;
 }
 
 export function OpponentsList({
@@ -21,6 +22,7 @@ export function OpponentsList({
   rounds,
   onRandomizeOpponents,
   isAnimating,
+  ref,
 }: OpponentsListProps) {
   // Calculate total points for each opponent
   const opponentPoints = opponents.reduce((acc, opponent) => {
@@ -39,7 +41,7 @@ export function OpponentsList({
   }, {} as Record<string, number>);
 
   return (
-    <Card className="p-6 bg-gray-800 border-gray-700">
+    <Card className="p-6 bg-gray-800 border-gray-700" ref={ref}>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-300">Opponents</h2>
         <Button

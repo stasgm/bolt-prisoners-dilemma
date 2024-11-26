@@ -4,10 +4,9 @@ import type { Round } from "@/lib/game/types";
 
 interface RoundHistoryProps {
   rounds: Round[];
-  ref: React.Ref<HTMLDivElement>;
 }
 
-export function RoundHistory({ rounds, ref }: RoundHistoryProps) {
+export function RoundHistory({ rounds }: RoundHistoryProps) {
   const roundsGrouped = rounds.reduce((acc, round) => {
     if (!acc[round.roundNumber]) {
       acc[round.roundNumber] = [];
@@ -18,7 +17,7 @@ export function RoundHistory({ rounds, ref }: RoundHistoryProps) {
 
   return (
     <>
-      <Card className="p-6 bg-gray-800 border-gray-700" ref={ref}>
+      <Card className="p-6 bg-gray-800 border-gray-700">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-200">Round History</h2>
           <Badge variant="secondary">{rounds.length} Games</Badge>
