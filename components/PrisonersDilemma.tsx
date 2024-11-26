@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { GameHeader } from "./game/GameHeader";
-import { GameControls } from "./game/GameControls";
-import { RoundHistory } from "./game/RoundHistory";
-import { OpponentsList } from "./game/OpponentsList";
-import { createPlayer, generateRandomOpponents } from "@/lib/game/opponents";
-import { strategies } from "@/lib/game/strategies";
-import type { Opponent, Round, Strategy } from "@/lib/game/types";
-import { TournamentCrosstable } from "./game/TournamentCrosstable";
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { GameHeader } from './game/GameHeader';
+import { GameControls } from './game/GameControls';
+import { RoundHistory } from './game/RoundHistory';
+import { OpponentsList } from './game/OpponentsList';
+import { createPlayer, generateRandomOpponents } from '@/lib/game/opponents';
+import { strategies } from '@/lib/game/strategies';
+import type { Opponent, Round, Strategy } from '@/lib/game/types';
+import { TournamentCrosstable } from './game/TournamentCrosstable';
 
 export default function PrisonersDilemma() {
   const [numberOfOpponents, setNumberOfOpponents] = useState(3);
@@ -16,12 +16,14 @@ export default function PrisonersDilemma() {
   const [rounds, setRounds] = useState<Round[]>([]);
   const [totalPoints, setTotalPoints] = useState({ my: 0, opponent: 0 });
   const [isAnimating, setIsAnimating] = useState(false);
-  const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(strategies[0]);
+  const [selectedStrategy, setSelectedStrategy] = useState<Strategy>(
+    strategies[0]
+  );
   const [numberOfRounds, setNumberOfRounds] = useState(1);
   const [gameDelay, setGameDelay] = useState(50);
   const [isInitialized, setIsInitialized] = useState(false);
   const currentRoundRef = useRef(1);
-  const currentPlayersRef = useRef<[string, string]>(["", ""]);
+  const currentPlayersRef = useRef<[string, string]>(['', '']);
   const childRef = useRef<HTMLDivElement>(null);
 
   const humanPlayer: Opponent = createPlayer({
@@ -29,7 +31,7 @@ export default function PrisonersDilemma() {
     name: 'You',
     description: selectedStrategy.description,
     personality: 'Human',
-    strategy: selectedStrategy
+    strategy: selectedStrategy,
   });
 
   const scrollToChild = async () => {
@@ -43,16 +45,16 @@ export default function PrisonersDilemma() {
       const onScroll = () => {
         const elementTop = element.getBoundingClientRect().top;
         if (Math.abs(elementTop) < 1) {
-          window.removeEventListener("scroll", onScroll);
+          window.removeEventListener('scroll', onScroll);
           resolve();
         }
       };
 
-      window.addEventListener("scroll", onScroll);
-      element.scrollIntoView({ behavior: "smooth" });
+      window.addEventListener('scroll', onScroll);
+      element.scrollIntoView({ behavior: 'smooth' });
 
       setTimeout(() => {
-        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener('scroll', onScroll);
         resolve();
       }, 100);
     });
@@ -61,7 +63,7 @@ export default function PrisonersDilemma() {
   useEffect(() => {
     if (!isInitialized) return;
 
-    setOpponents(prev => {
+    setOpponents((prev) => {
       const diff = numberOfOpponents - prev.length;
       if (diff > 0) {
         return [...prev, ...generateRandomOpponents(diff)];
@@ -80,15 +82,29 @@ export default function PrisonersDilemma() {
     }
   }, [isInitialized]);
 
-  const playMatch = async (opponent1: Opponent, opponent2: Opponent, roundNumber: number) => {
-    const choice1 = opponent1.strategy.getChoice(rounds.filter(r =>
-      (r.opponentName === opponent1.name && r.opponent2Name === opponent2.name) ||
-      (r.opponentName === opponent2.name && r.opponent2Name === opponent1.name)
-    ));
-    const choice2 = opponent2.strategy.getChoice(rounds.filter(r =>
-      (r.opponentName === opponent2.name && r.opponent2Name === opponent1.name) ||
-      (r.opponentName === opponent1.name && r.opponent2Name === opponent2.name)
-    ));
+  const playMatch = async (
+    opponent1: Opponent,
+    opponent2: Opponent,
+    roundNumber: number
+  ) => {
+    const choice1 = opponent1.strategy.getChoice(
+      rounds.filter(
+        (r) =>
+          (r.opponentName === opponent1.name &&
+            r.opponent2Name === opponent2.name) ||
+          (r.opponentName === opponent2.name &&
+            r.opponent2Name === opponent1.name)
+      )
+    );
+    const choice2 = opponent2.strategy.getChoice(
+      rounds.filter(
+        (r) =>
+          (r.opponentName === opponent2.name &&
+            r.opponent2Name === opponent1.name) ||
+          (r.opponentName === opponent1.name &&
+            r.opponent2Name === opponent2.name)
+      )
+    );
 
     const result = opponent1.outcomes[choice1][choice2]; // REFACTOR
 
@@ -102,18 +118,30 @@ export default function PrisonersDilemma() {
       opponent2Name: opponent2.name,
       opponentStrategy: opponent1.strategy.name,
       opponent2Strategy: opponent2.strategy.name,
-      roundNumber
+      roundNumber,
     };
 
     // await scrollToChild();
 
-    setRounds(prev => [...prev, roundResult]);
-    setTotalPoints(prev => ({
-      my: prev.my + (opponent1 === humanPlayer ? result.opponentPoints : (opponent2 === humanPlayer ? result.opponent2Points : 0)),
-      opponent: prev.opponent + (opponent1 === humanPlayer ? result.opponent2Points : (opponent2 === humanPlayer ? result.opponentPoints : 0)),
+    setRounds((prev) => [...prev, roundResult]);
+    setTotalPoints((prev) => ({
+      my:
+        prev.my +
+        (opponent1 === humanPlayer
+          ? result.opponentPoints
+          : opponent2 === humanPlayer
+          ? result.opponent2Points
+          : 0),
+      opponent:
+        prev.opponent +
+        (opponent1 === humanPlayer
+          ? result.opponent2Points
+          : opponent2 === humanPlayer
+          ? result.opponentPoints
+          : 0),
     }));
 
-    await new Promise(resolve => setTimeout(resolve, gameDelay));
+    await new Promise((resolve) => setTimeout(resolve, gameDelay));
   };
 
   const playAllRounds = async () => {
@@ -139,7 +167,7 @@ export default function PrisonersDilemma() {
   };
 
   const resetGame = () => {
-    currentPlayersRef.current = ["", ""];
+    currentPlayersRef.current = ['', ''];
     setRounds([]);
     setTotalPoints({ my: 0, opponent: 0 });
     currentRoundRef.current = 1;
@@ -185,10 +213,10 @@ export default function PrisonersDilemma() {
         currentPlayers={currentPlayersRef.current}
         ref={childRef}
       />
-      
+
       <TournamentCrosstable
         rounds={rounds}
-        players={allPlayers.map(p => p.name)}
+        players={allPlayers.map((p) => p.name)}
       />
 
       <RoundHistory rounds={rounds} />
