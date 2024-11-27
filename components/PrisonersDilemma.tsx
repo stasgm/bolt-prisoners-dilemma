@@ -5,9 +5,9 @@ import { GameHeader } from './game/GameHeader';
 import { GameControls } from './game/GameControls';
 import { RoundHistory } from './game/RoundHistory';
 import { OpponentsList } from './game/OpponentsList';
-import { createPlayer, generateRandomOpponents } from '@/lib/game/opponents';
+import { createPlayer, generateRandomOpponents, standardOutcomes } from '@/lib/game/opponents';
 import { strategies } from '@/lib/game/strategies';
-import type { Opponent, Round, Strategy } from '@/lib/game/types';
+import type { Choice, Opponent, Round, Strategy } from '@/lib/game/types';
 import { TournamentCrosstable } from './game/TournamentCrosstable';
 
 export default function PrisonersDilemma() {
@@ -87,7 +87,7 @@ export default function PrisonersDilemma() {
     opponent2: Opponent,
     roundNumber: number
   ) => {
-    const choice1 = opponent1.strategy.getChoice(
+    const choice1: Choice = opponent1.strategy.getChoice(
       rounds.filter(
         (r) =>
           (r.opponentName === opponent1.name &&
@@ -96,7 +96,7 @@ export default function PrisonersDilemma() {
             r.opponent2Name === opponent1.name)
       )
     );
-    const choice2 = opponent2.strategy.getChoice(
+    const choice2: Choice = opponent2.strategy.getChoice(
       rounds.filter(
         (r) =>
           (r.opponentName === opponent2.name &&
@@ -106,7 +106,7 @@ export default function PrisonersDilemma() {
       )
     );
 
-    const result = opponent1.outcomes[choice1][choice2]; // REFACTOR
+    const result = standardOutcomes[choice1][choice2];
 
     const roundResult: Round = {
       opponentChoice: choice1,

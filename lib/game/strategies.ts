@@ -15,7 +15,7 @@ export const strategies: Strategy[] = [
   },
   {
     id: "tit-for-tat",
-    name: "Tit for Tat",
+    name: "Tit for Tat (copycat)",
     description: "Copy opponent's last move",
     getChoice: (rounds) =>
       rounds.length === 0 ? "cooperate" : rounds[rounds.length - 1].opponentChoice,

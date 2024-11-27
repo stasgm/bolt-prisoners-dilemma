@@ -103,7 +103,6 @@ export const createPlayer = ({ id, name, description, personality, strategy }: I
     description,
     personality,
     strategy,
-    outcomes: standardOutcomes,
     getChoice: function (rounds: Round[]): Choice {
       return this.strategy.getChoice(rounds);
     },

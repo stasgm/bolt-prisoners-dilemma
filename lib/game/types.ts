@@ -1,3 +1,5 @@
+export const Choice = { cooperate: "cooperate", refuse: "refuse" };
+
 export type Choice = "cooperate" | "refuse";
 
 export interface Trait {
@@ -49,6 +51,5 @@ export interface Opponent {
   description: string;
   personality: string;
   strategy: Strategy;
-  outcomes: StandardOutcomes;
   getChoice: (rounds: Round[]) => Choice;
 }

@@ -10,7 +10,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { getBadgeColor } from "@/lib/game/utils";
 import type { Round } from '@/lib/game/types';
+import { cn } from '../../lib/utils';
 
 interface TournamentCrosstableProps {
   rounds: Round[];
@@ -46,17 +48,11 @@ export function TournamentCrosstable({
     }).sort((a, b) => a.round - b.round);
   };
 
-  const getBadgeColor = (points1: number, points2: number) => {
-    if (points1 > points2) return 'bg-green-600';
-    if (points1 < points2) return 'bg-red-600';
-    return 'bg-blue-600';
-  };
-
   return (
     <Card className="p-6 bg-gray-800 border-gray-700 mt-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-200">
-          Tournament Matrix
+          Tournament Crosstable
         </h2>
         <Badge variant="secondary">{players.length} Players</Badge>
       </div>
@@ -85,13 +81,18 @@ export function TournamentCrosstable({
                       {player1 === player2 ? (
                         <span className="text-gray-500">-</span>
                       ) : (
-                        <div className="grid gap-1">
+                        <div className="grid gap-1 grid-cols-2">
                           {results?.map(({ points1, points2, round }) => (
                             <Badge
                               key={round}
-                              className={getBadgeColor(points1, points2)}
+                              className={cn(getBadgeColor(points1, points2), "flex items-center gap-2 px-3 w-full")}
                             >
-                              R{round}: {points1}-{points2}
+                              <span className="font-bold">R{round}:</span>
+                              <div className="flex items-center gap-1 mx-auto">
+                                <span className="font-bold py-0.5 px-1 rounded bg-black/20 text-center w-[20px]">{points1}</span>
+                                <span className="font-medium">-</span>
+                                <span className="font-bold py-0.5 px-1 rounded bg-black/20 text-center w-[20px]">{points2}</span>
+                              </div>
                             </Badge>
                           ))}
                         </div>
