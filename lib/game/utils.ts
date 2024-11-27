@@ -2,9 +2,9 @@ import { Choice } from "./types";
 
 // Badge color constants
 export const BADGE_COLORS = {
-  WIN: 'bg-green-600',
-  LOSE: 'bg-red-600',
-  DRAW: 'bg-blue-600',
+	WIN: "bg-green-600",
+	LOSE: "bg-red-600",
+	DRAW: "bg-blue-600",
 } as const;
 
 /**
@@ -14,16 +14,16 @@ export const BADGE_COLORS = {
  * @returns Tailwind CSS class for the badge background color
  */
 export const getBadgeColor = (value1: number | Choice, value2: number | Choice): string => {
-  // Handle points comparison
-  if (typeof value1 === 'number' && typeof value2 === 'number') {
-    if (value1 > value2) return BADGE_COLORS.WIN;
-    if (value1 < value2) return BADGE_COLORS.LOSE;
-    return BADGE_COLORS.DRAW;
-  }
-  
-  // Handle cooperation/betrayal
-  if (value1 === 'cooperate') {
-    return value2 === 'cooperate' ? BADGE_COLORS.DRAW : BADGE_COLORS.WIN;
-  }
-  return BADGE_COLORS.LOSE;
+	// Handle points comparison
+	if (typeof value1 === "number" && typeof value2 === "number") {
+		if (value1 > value2) return BADGE_COLORS.WIN;
+		if (value1 < value2) return BADGE_COLORS.LOSE;
+		return BADGE_COLORS.DRAW;
+	}
+
+	// Handle cooperation/betrayal
+	if (value1 === "cooperate") {
+		return value2 === "cooperate" ? BADGE_COLORS.DRAW : BADGE_COLORS.WIN;
+	}
+	return BADGE_COLORS.LOSE;
 };
