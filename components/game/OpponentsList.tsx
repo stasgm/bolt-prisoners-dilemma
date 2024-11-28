@@ -13,12 +13,7 @@ interface OpponentsListProps {
 	onRandomizeOpponentsAction: () => void;
 }
 
-export function OpponentsList({
-	opponents,
-	rounds,
-	isAnimating,
-	onRandomizeOpponentsAction,
-}: OpponentsListProps) {
+export function OpponentsList({ opponents, rounds, isAnimating, onRandomizeOpponentsAction }: OpponentsListProps) {
 	// Calculate total points for each opponent
 	const opponentPoints = opponents.reduce(
 		(acc, opponent) => {
@@ -46,7 +41,7 @@ export function OpponentsList({
 					onClick={onRandomizeOpponentsAction}
 					variant="default"
 					size="sm"
-					className="bg-blue-600 hover:bg-blue-700 text-white"
+					className="bg-blue-600 text-white hover:bg-blue-700"
 					disabled={isAnimating}
 				>
 					<ShuffleIcon className="mr-2 h-4 w-4" />
@@ -64,7 +59,7 @@ export function OpponentsList({
 						</div>
 						<div className="flex items-center justify-start">
 							<span className="text-sm text-purple-300 text-opacity-80">
-								<span className="font-semibold rounded bg-black/20 px-2 py-1">{opponent.strategy.name}</span>
+								<span className="rounded bg-black/20 px-2 py-1 font-semibold">{opponent.strategy.name}</span>
 							</span>
 						</div>
 					</div>

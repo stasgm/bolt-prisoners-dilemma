@@ -170,10 +170,8 @@ export default function PrisonersDilemma() {
 	const playedGames = rounds.length;
 	const isGameComplete = playedGames >= totalGames;
 
-	const currentOpponent = opponents.find((opp) => currentPlayersRef.current.includes(opp.id)) || null;
-
 	return (
-		<div className="mx-auto max-w-7xl space-y-4 md:space-y-8 pb-2 md:pb-8">
+		<div className="mx-auto max-w-7xl space-y-4 pb-2 md:space-y-8 md:pb-8">
 			<GameHeader />
 
 			<GameControls
@@ -207,7 +205,7 @@ export default function PrisonersDilemma() {
 				numberOfRounds={numberOfRounds}
 				opponents={allPlayers}
 				currentPlayers={currentPlayersRef.current}
-				selectedOpponent={currentOpponent}
+				rounds={rounds}
 				childRef={childRef}
 			/>
 

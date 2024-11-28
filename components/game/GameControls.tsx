@@ -77,7 +77,7 @@ export function GameControls({
 									max={5}
 									min={1}
 									step={1}
-									className="my-4"
+									className="my-4 [&_[role=slider]]:cursor-grab"
 								/>
 							</div>
 							<div>
@@ -88,7 +88,7 @@ export function GameControls({
 									max={9}
 									min={2}
 									step={1}
-									className="my-4"
+									className="my-4 [&_[role=slider]]:cursor-grab"
 								/>
 							</div>
 							<div>
@@ -99,13 +99,13 @@ export function GameControls({
 									max={1000}
 									min={0}
 									step={100}
-									className="my-4"
+									className="my-4 [&_[role=slider]]:cursor-grab"
 								/>
 							</div>
 						</div>
 					</div>
 
-					<div className="flex items-center justify-between space-x-4">
+					<div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
 						<Button
 							onClick={onPlayAllRounds}
 							disabled={isAnimating || isGameComplete}

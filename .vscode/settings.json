@@ -16,8 +16,5 @@
 	},
 	"editor.quickSuggestions": {
 		"strings": true
-	},
-	"[prisma]": {
-		"editor.defaultFormatter": "Prisma.prisma"
 	}
 }

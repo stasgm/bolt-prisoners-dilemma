@@ -5,6 +5,11 @@ export const Choice = {
 
 export type Choice = "cooperate" | "refuse";
 
+export const choiceNames = {
+	[Choice.cooperate]: "Cooperated",
+	[Choice.refuse]: "Betrayed",
+};
+
 export interface Trait {
 	personality: string;
 	description: string;

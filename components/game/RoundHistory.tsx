@@ -1,16 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getBadgeColor } from "@/lib/game/utils";
-import { Choice, type Round } from "@/lib/game/types";
+import { Choice, choiceNames, type Round } from "@/lib/game/types";
 import { cn } from "../../lib/utils";
 
 interface RoundHistoryProps {
 	rounds: Round[];
 }
-const choiceNames = {
-	[Choice.cooperate]: "Cooperated",
-	[Choice.refuse]: "Betrayed",
-};
 
 const GameBadge = ({ round, player }: { round: Round; player: number }) => {
 	const { name, points, choice, badgeColor } = (() => {
