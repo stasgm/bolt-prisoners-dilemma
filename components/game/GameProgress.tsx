@@ -2,12 +2,12 @@
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CircleVisualization } from "./CircleVisualization";
-import { choiceNames, type Opponent, type Round } from "@/lib/game/types";
-import { useEffect, useState } from "react";
-import { useWindowSize } from "@/hooks/useWindowSize";
 import { cn } from "@/lib/utils";
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { getBadgeColor } from "@/lib/game/utils";
+import { choiceNames, type Opponent, type Round } from "@/lib/game/types";
+import { CircleVisualization } from "./CircleVisualization";
+import { PayoffMatrix } from "./PayoffMatrix";
 
 interface GameProgressProps {
 	totalPoints: {
@@ -137,6 +137,13 @@ export function GameProgress({
 							</div>
 						)}
 					</div>
+
+					{opponent1 && opponent2 && currentRoundData && (
+						<PayoffMatrix
+							player1Choice={currentRoundData.opponentChoice}
+							player2Choice={currentRoundData.opponent2Choice}
+						/>
+					)}
 				</div>
 
 				<CircleVisualization
