@@ -95,11 +95,18 @@ export const createPlayer = ({ id, name, strategy }: IPlayerInfo): Opponent => {
 export function generateRandomOpponents(count: number, recreate: boolean = false): Opponent[] {
 	const randomOpponents: Opponent[] = [];
 
-	// If recreating or we need more names, refresh the names array
+	// If recreating, refresh the names array
 	if (recreate) {
 		uniqueNames = shuffleArray([...randomNames]);
 		opponentCounter = 0; // Reset counter only when recreating
+		return generateRandomOpponents(count, false);
 	}
+
+	// Return unused names back to the pool
+	uniqueNames = shuffleArray([
+		...uniqueNames,
+		...randomNames.filter(name => !uniqueNames.includes(name) && !name.startsWith('guest-'))
+	]);
 
 	// Calculate how many guest names we need
 	const availableCount = uniqueNames.length;

@@ -9,27 +9,16 @@ interface PayoffMatrixProps {
 }
 
 export function PayoffMatrix({ player1Choice, player2Choice }: PayoffMatrixProps) {
-	const matrix = {
-		cooperate: {
-			cooperate: { p1: 3, p2: 3 },
-			refuse: { p1: 0, p2: 5 },
-		},
-		refuse: {
-			cooperate: { p1: 5, p2: 0 },
-			refuse: { p1: 1, p2: 1 },
-		},
-	};
-
 	const isActive = (p1: Choice, p2: Choice) => player1Choice === p1 && player2Choice === p2;
 
 	return (
 		<Card className="border-gray-700 bg-gray-800 p-6">
 			<div className="flex items-center justify-center space-x-4">
 				{/* Player 1 */}
-				<div className="flex flex-col items-center">
+				<div className="hidden sm:flex flex-col items-center">
 					<svg width="60" height="60" viewBox="0 0 60 60">
-						<circle cx="30" cy="30" r="25" fill="#374151" stroke="#4B5563" strokeWidth="2" />
-						<text x="30" y="35" textAnchor="middle" fill="#9CA3AF" className="text-sm">
+						<circle cx="30" cy="30" r="25" fill="#7C2D12" stroke="#FB923C" strokeWidth="2" />
+						<text x="30" y="35" textAnchor="middle" fill="#FB923C" className="text-sm">
 							P1
 						</text>
 					</svg>
@@ -43,7 +32,7 @@ export function PayoffMatrix({ player1Choice, player2Choice }: PayoffMatrixProps
 
 						{/* Diamond shapes */}
 						{/* Top diamond (Cooperate-Cooperate) */}
-						<g transform="translate(0, -60)">
+						<g transform="translate(0, -45)">
 							{/* Left half */}
 							<path
 								d="M 0 -40 L -40 0 L 0 40 L 0 0 Z"
@@ -58,16 +47,16 @@ export function PayoffMatrix({ player1Choice, player2Choice }: PayoffMatrixProps
 								stroke="#4B5563"
 								strokeWidth="2"
 							/>
-							<text x="-15" y="0" textAnchor="middle" fill="#D1D5DB" className="text-sm">
+							<text x="-15" y="5" textAnchor="middle" fill="#D1D5DB" className="text-sm">
 								+3
 							</text>
-							<text x="15" y="0" textAnchor="middle" fill="#D1D5DB" className="text-sm">
+							<text x="15" y="5" textAnchor="middle" fill="#D1D5DB" className="text-sm">
 								+3
 							</text>
 						</g>
 
 						{/* Right diamond (Cooperate-Refuse) */}
-						<g transform="translate(60, 0)">
+						<g transform="translate(45, 0)">
 							{/* Left half */}
 							<path
 								d="M 0 -40 L -40 0 L 0 40 L 0 0 Z"
@@ -82,16 +71,16 @@ export function PayoffMatrix({ player1Choice, player2Choice }: PayoffMatrixProps
 								stroke="#4B5563"
 								strokeWidth="2"
 							/>
-							<text x="-15" y="0" textAnchor="middle" fill="#D1D5DB" className="text-sm">
+							<text x="-15" y="5" textAnchor="middle" fill="#D1D5DB" className="text-sm">
 								0
 							</text>
-							<text x="15" y="0" textAnchor="middle" fill="#D1D5DB" className="text-sm">
+							<text x="15" y="5" textAnchor="middle" fill="#D1D5DB" className="text-sm">
 								+5
 							</text>
 						</g>
 
 						{/* Left diamond (Refuse-Cooperate) */}
-						<g transform="translate(-60, 0)">
+						<g transform="translate(-45, 0)">
 							{/* Left half */}
 							<path
 								d="M 0 -40 L -40 0 L 0 40 L 0 0 Z"
@@ -106,16 +95,16 @@ export function PayoffMatrix({ player1Choice, player2Choice }: PayoffMatrixProps
 								stroke="#4B5563"
 								strokeWidth="2"
 							/>
-							<text x="-15" y="0" textAnchor="middle" fill="#D1D5DB" className="text-sm">
+							<text x="-15" y="5" textAnchor="middle" fill="#D1D5DB" className="text-sm">
 								+5
 							</text>
-							<text x="15" y="0" textAnchor="middle" fill="#D1D5DB" className="text-sm">
+							<text x="15" y="5" textAnchor="middle" fill="#D1D5DB" className="text-sm">
 								0
 							</text>
 						</g>
 
 						{/* Bottom diamond (Refuse-Refuse) */}
-						<g transform="translate(0, 60)">
+						<g transform="translate(0, 45)">
 							{/* Left half */}
 							<path
 								d="M 0 -40 L -40 0 L 0 40 L 0 0 Z"
@@ -130,10 +119,10 @@ export function PayoffMatrix({ player1Choice, player2Choice }: PayoffMatrixProps
 								stroke="#4B5563"
 								strokeWidth="2"
 							/>
-							<text x="-15" y="0" textAnchor="middle" fill="#D1D5DB" className="text-sm">
+							<text x="-15" y="5" textAnchor="middle" fill="#D1D5DB" className="text-sm">
 								+1
 							</text>
-							<text x="15" y="0" textAnchor="middle" fill="#D1D5DB" className="text-sm">
+							<text x="15" y="5" textAnchor="middle" fill="#D1D5DB" className="text-sm">
 								+1
 							</text>
 						</g>
@@ -149,10 +138,10 @@ export function PayoffMatrix({ player1Choice, player2Choice }: PayoffMatrixProps
 				</svg>
 
 				{/* Player 2 */}
-				<div className="flex flex-col items-center">
+				<div className="hidden sm:flex flex-col items-center">
 					<svg width="60" height="60" viewBox="0 0 60 60">
-						<circle cx="30" cy="30" r="25" fill="#374151" stroke="#4B5563" strokeWidth="2" />
-						<text x="30" y="35" textAnchor="middle" fill="#9CA3AF" className="text-sm">
+						<circle cx="30" cy="30" r="25" fill="#134E4A" stroke="#2DD4BF" strokeWidth="2" />
+						<text x="30" y="35" textAnchor="middle" fill="#2DD4BF" className="text-sm">
 							P2
 						</text>
 					</svg>

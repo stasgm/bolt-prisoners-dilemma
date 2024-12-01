@@ -24,10 +24,7 @@ export function CircleVisualization({ opponents, currentPlayers, size = 300 }: C
 	};
 
 	return (
-		<Card className="border-gray-700 bg-gray-800 p-6">
-			<div className="mb-4 flex items-center justify-between">
-				<h2 className="text-xl font-semibold text-gray-200">Game Progress</h2>
-			</div>
+		<Card className="border-gray-700 bg-gray-800">
 			<div className="flex justify-center">
 				<svg width={size} height={size} className="-rotate-90 transform">
 					{/* Connection lines */}

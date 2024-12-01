@@ -2,11 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { PlayIcon, RotateCcwIcon } from "lucide-react";
-import type { Strategy } from "@/lib/game/types";
+import type { Opponent, Round, Strategy } from "@/lib/game/types";
 import { Slider } from "@/components/ui/slider";
+import { OpponentsList } from "./OpponentsList";
+import { CircleVisualization } from "@/components/game/CircleVisualization";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 interface GameControlsProps {
 	numberOfOpponents: number;
@@ -14,14 +16,20 @@ interface GameControlsProps {
 	selectedStrategy: Strategy;
 	isAnimating: boolean;
 	isGameComplete: boolean;
-	numberOfRounds: number;
 	gameDelay: number;
+	opponents: Opponent[];
+	rounds: Round[];
+	currentPlayers: [string, string];
+	totalPoints: {
+		my: number;
+		opponent: number;
+	};
 	onStrategyChangeAction: (strategy: Strategy) => void;
 	onPlayAllRoundsAction: () => void;
 	onResetAction: () => void;
-	onRoundsChangeAction: (rounds: number) => void;
 	onNumberOfOpponentsChangeAction: (rounds: number) => void;
 	onDelayChangeAction: (delay: number) => void;
+	onRandomizeOpponentsAction: () => void;
 }
 
 export function GameControls({
@@ -33,64 +41,42 @@ export function GameControls({
 	onResetAction: onReset,
 	isAnimating,
 	isGameComplete,
-	numberOfRounds,
-	onRoundsChangeAction,
+	currentPlayers,
 	onNumberOfOpponentsChangeAction,
 	gameDelay,
 	onDelayChangeAction,
+	opponents,
+	rounds,
+	onRandomizeOpponentsAction,
+	totalPoints,
 }: GameControlsProps) {
-	function onDelayChange(arg0: number): void {
-		throw new Error("Function not implemented.");
-	}
+	const windowWidth = useWindowSize();
 
 	return (
 		<Card className="border-gray-700 bg-gray-800 p-6">
-			<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr,1fr]">
 				<div className="space-y-6">
-					<div>
-						<Label className="mb-2 block text-gray-300">Your Strategy</Label>
-						<Select
-							value={selectedStrategy.id}
-							onValueChange={(id) => onStrategyChange(strategies.find((s) => s.id === id)!)}
-						>
-							<SelectTrigger className="w-full border-gray-600 bg-gray-700">
-								<SelectValue placeholder="Choose strategy" />
-							</SelectTrigger>
-							<SelectContent>
-								{strategies.map((strategy) => (
-									<SelectItem key={strategy.id} value={strategy.id}>
-										{strategy.name}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-						<p className="mt-2 text-sm text-gray-400">{selectedStrategy.description}</p>
-					</div>
-
+					<OpponentsList
+						opponents={opponents}
+						rounds={rounds}
+						isAnimating={isAnimating}
+						onRandomizeOpponentsAction={onRandomizeOpponentsAction}
+						strategies={strategies}
+						selectedStrategy={selectedStrategy}
+						onStrategyChangeAction={onStrategyChange}
+						totalPoints={totalPoints}
+						numberOfOpponents={numberOfOpponents}
+						onNumberOfOpponentsChangeAction={onNumberOfOpponentsChangeAction}
+					/>
+				</div>
+				<div className="space-y-6">
+					<CircleVisualization
+						opponents={opponents}
+						currentPlayers={currentPlayers}
+						size={windowWidth < 768 ? 250 : 450}
+					/>
 					<div className="flex items-center space-x-4">
-						<div className="grid flex-1 grid-cols-3 gap-4">
-							<div>
-								<Label className="text-gray-300">Rounds ({numberOfRounds})</Label>
-								<Slider
-									value={[numberOfRounds]}
-									onValueChange={(value) => onRoundsChangeAction(value[0])}
-									max={5}
-									min={1}
-									step={1}
-									className="my-4 [&_[role=slider]]:cursor-grab"
-								/>
-							</div>
-							<div>
-								<Label className="text-gray-300">Opponents ({numberOfOpponents})</Label>
-								<Slider
-									value={[numberOfOpponents]}
-									onValueChange={(value) => onNumberOfOpponentsChangeAction(value[0])}
-									max={9}
-									min={2}
-									step={1}
-									className="my-4 [&_[role=slider]]:cursor-grab"
-								/>
-							</div>
+						<div className="grid flex-1 grid-cols-2 gap-4">
 							<div>
 								<Label className="text-gray-300">Delay ({gameDelay} ms)</Label>
 								<Slider
@@ -105,19 +91,26 @@ export function GameControls({
 						</div>
 					</div>
 
-					<div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+					<div className="flex items-center justify-end space-x-4">
+						<Button
+							onClick={onReset}
+							variant="outline"
+							size="lg"
+							className="border-gray-600 bg-gray-700 text-white hover:bg-gray-600"
+							disabled={isAnimating}
+						>
+							<RotateCcwIcon className="mr-2 h-4 w-4" />
+							Reset
+						</Button>
 						<Button
 							onClick={onPlayAllRounds}
+							variant="default"
+							size="lg"
+							className="bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
 							disabled={isAnimating || isGameComplete}
-							className="w-full bg-blue-600 hover:bg-blue-700"
 						>
 							<PlayIcon className="mr-2 h-4 w-4" />
 							Play All Rounds
-						</Button>
-
-						<Button onClick={onReset} variant="outline" className="w-full" disabled={isAnimating}>
-							<RotateCcwIcon className="mr-2 h-4 w-4" />
-							Reset Game
 						</Button>
 					</div>
 				</div>

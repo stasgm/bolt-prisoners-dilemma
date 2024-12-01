@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { createPlayer, generateRandomOpponents, standardOutcomes } from "@/lib/game/opponents";
 import { strategies } from "@/lib/game/strategies";
 import type { Choice, Opponent, Round, Strategy } from "@/lib/game/types";
-import { OpponentsList } from "@/components/game/OpponentsList";
 import { GameHeader } from "./game/GameHeader";
 import { GameControls } from "./game/GameControls";
 import { RoundHistory } from "./game/RoundHistory";
@@ -181,24 +180,19 @@ export default function PrisonersDilemma() {
 				onStrategyChangeAction={setSelectedStrategy}
 				onPlayAllRoundsAction={playAllRounds}
 				onResetAction={resetGame}
-				numberOfRounds={numberOfRounds}
+				currentPlayers={currentPlayersRef.current}
 				isAnimating={isAnimating}
 				isGameComplete={isGameComplete}
-				onRoundsChangeAction={setNumberOfRounds}
 				onNumberOfOpponentsChangeAction={setNumberOfOpponents}
 				gameDelay={gameDelay}
-				onDelayChangeAction={setGameDelay}
-			/>
-
-			<OpponentsList
 				opponents={allPlayers}
 				rounds={rounds}
 				onRandomizeOpponentsAction={randomizeOpponentList}
-				isAnimating={isAnimating}
+				onDelayChangeAction={setGameDelay}
+				totalPoints={totalPoints}
 			/>
 
 			<GameProgress
-				totalPoints={totalPoints}
 				totalGames={totalGames}
 				playedGames={playedGames}
 				currentRound={currentRound}
@@ -206,6 +200,8 @@ export default function PrisonersDilemma() {
 				opponents={allPlayers}
 				currentPlayers={currentPlayersRef.current}
 				rounds={rounds}
+				onRoundsChangeAction={setNumberOfRounds}
+				isAnimating={isAnimating}
 				childRef={childRef}
 			/>
 
